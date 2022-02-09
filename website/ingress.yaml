@@ -8,7 +8,6 @@ spec:
   rules:
     http:
       paths:
-        - path: /herginnie
-          - backend:
-              serviceName: mywebsite
-              servicePort: 3000
+        - backend:
+            serviceName: mywebsite
+            servicePort: 3000
