@@ -7,10 +7,10 @@ spec:
   ingressClassName: mynginx
   rules:
     - http:
-      paths:
-        - path: /herginnie
-          backend:
-            service:
-              name: mywebsite
-              port:
-                nubmer: 3000
+        paths:
+          - path: /herginnie
+            backend:
+              service:
+                name: mywebsite
+                port:
+                  nubmer: 3000
