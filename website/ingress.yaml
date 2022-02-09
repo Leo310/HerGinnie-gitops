@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: website-ingress
+  namespace: myherginniewebsite
+spec:
+  ingressClassName: mynginx
+  rules:
+    - http:
+        paths:
+          - path: /herginnie
+            backend:
+              service:
+                name: mywebsite
+                port: 3000
