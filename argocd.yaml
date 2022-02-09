@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
-    path: apps
+    path: website
   destination:
     server: https://kubernetes.default.svc
     namespace: myherginniewebsite
