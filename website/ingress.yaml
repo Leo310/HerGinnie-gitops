@@ -3,12 +3,15 @@ kind: Ingress
 metadata:
   name: website-ingress
   namespace: myherginniewebsite
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: mynginx
   rules:
     - http:
         paths:
           - path: /herginnie
+            pathType: Prefix
             backend:
               service:
                 name: mywebsite
