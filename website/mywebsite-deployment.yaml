@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mywebsite-deployment
+  labels:
+    app: mywebsite
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mywebsite
+  template:
+    metadata:
+      name: mywebsite
+      labels:
+        app: mywebsite
+    spec:
+      containers:
+        - name: mywebsite
+          image: mywebsite
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
