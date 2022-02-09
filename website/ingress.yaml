@@ -13,5 +13,7 @@ spec:
           - path: /herginnie
             pathType: Prefix
             backend:
-              serviceName: mywebsite
-              servicePort: 3000
+              service:
+                name: mywebsite
+                port:
+                  number: 3000
