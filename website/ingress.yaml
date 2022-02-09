@@ -6,8 +6,11 @@ metadata:
 spec:
   ingressClassName: mynginx
   rules:
-    http:
+    - http:
       paths:
-        - backend:
-            serviceName: mywebsite
-            servicePort: 3000
+        - path: /herginnie
+          backend:
+            service:
+              name: mywebsite
+              port:
+                nubmer: 3000
