@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Leo310/HerGinnie-gitops
+    targetRevision: HEAD
+    path: applications/argocd/overlays/argocd/herginnies-world-cluster1
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

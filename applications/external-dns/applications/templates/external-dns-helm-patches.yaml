@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns-helm-patches
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Leo310/HerGinnie-gitops
+    targetRevision: HEAD
+    path: {{ printf "applications/external-dns/helm-patches/overlays/%s" .Values.clusterName }}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-dns
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

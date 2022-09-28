@@ -1,0 +1,31 @@
+version: '3'
+services:
+  dev:
+    image: gitops-dev-tooling:latest
+    build:
+      context: .
+      args:
+      # - helm_version="3.6.0"
+      # - kubectl_version="v1.21.4"
+      # - kubeseal_version="0.17.1"
+      # - kustomize_version="v4.2.0"
+      # - argocd_version="v2.1.7"
+
+      - uid=${uid}
+      - gid=${gid}
+      - username=${username}
+      - container_home=${CONTAINER_HOME}
+    stdin_open: true
+    tty: true
+    environment:
+      - KUBECONFIG=${CONTAINER_HOME}/.kube/config_from_host
+    volumes:
+      - ${HOME}/.gitconfig:${CONTAINER_HOME}/.gitconfig
+      - ${HOME}/.bashrc:${CONTAINER_HOME}/.bashrc
+      - ${TOP_LEVEL_DIR}:${WORKDIR}
+      - ${KUBECONFIG:-/dev/null}:${CONTAINER_HOME}/.kube/config_from_host
+    entrypoint:
+      - /bin/bash
+    # user: "${uid}:${gid}"
+    working_dir: ${WORKDIR}
+    hostname: "dev_container"

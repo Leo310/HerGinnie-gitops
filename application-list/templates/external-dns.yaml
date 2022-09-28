@@ -1,0 +1,24 @@
+{{- if .Values.deploy.externalDns }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns-apps
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Leo310/HerGinnie-gitops
+    targetRevision: HEAD
+    path: applications/external-dns/applications
+    helm:
+      valueFiles:
+        - {{ printf "../../../global-values/%s.yaml" .Values.clusterName }}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-dns
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+{{- end }}

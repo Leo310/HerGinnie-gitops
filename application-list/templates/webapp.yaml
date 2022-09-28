@@ -1,0 +1,21 @@
+{{- if .Values.deploy.webapp }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: webapp
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Leo310/HerGinnie-gitops
+    targetRevision: HEAD
+    path: applications/webapp
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: webapp
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+{{- end }}

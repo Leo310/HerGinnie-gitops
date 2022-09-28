@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns-ingress
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Leo310/HerGinnie-gitops
+    targetRevision: HEAD
+    path: applications/external-dns/source
+    helm:
+      valueFiles:
+      - "../values/global/ingress.yaml"
+      - "../values/cluster-specific/herginnies-world-cluster1/ingress.yaml"
+      - {{ printf "../../../global-values/%s.yaml" .Values.clusterName }}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-dns
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

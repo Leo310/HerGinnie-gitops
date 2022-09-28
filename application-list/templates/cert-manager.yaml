@@ -1,21 +1,24 @@
+{{- if .Values.deploy.certManager }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-app
+  name: cert-manager-apps
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
-    path: website
+    path: applications/cert-manager/applications
+    helm:
+      valueFiles:
+        - {{ printf "../../../global-values/%s.yaml" .Values.clusterName }}
   destination:
     server: https://kubernetes.default.svc
-    namespace: myherginniewebsite
+    namespace: cert-manager
 
   syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
     automated:
       selfHeal: true
       prune: true
+{{- end }}

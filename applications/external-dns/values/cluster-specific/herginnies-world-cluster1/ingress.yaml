@@ -1,0 +1,19 @@
+provider: aws
+interval: 1m
+
+extraVolumes: 
+# AWS volume(s)
+- name: aws-credentials
+  secret:
+    secretName: aws-route53-secret
+
+extraVolumeMounts:
+- name: aws-credentials
+  mountPath: /.aws
+  readOnly: true
+
+# extraArgs:
+#   txt-owner-id: intber-eu-ingress
+
+# sets the lookup domain for external-dns
+domainFilters: ["herginnies.world"]

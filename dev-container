@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# executing bash through env gives extra flexibility becuase env
+# resolves path to bash depending on the os
+
+declare -A ENV_VARS
+ENV_VARS=( \
+  ["KUBECONFIG"]="  (optional) Path to the kubeconfig that will be mounted and set as \"KUBECONFIG\" in the container."
+)
+
+function main() {
+  export TOP_LEVEL_DIR=$(git rev-parse --show-toplevel)
+  export BUILD_CONTEXT="${TOP_LEVEL_DIR}/build-dev-container"
+  export CONTAINER_HOME="/home"
+  export WORKDIR="/leonard-gitops"
+
+	parse_parameters $@
+
+  set_user_variables
+
+  if [[ "${CMD}" == "build" ]]; then
+    docker-compose \
+      --file "${BUILD_CONTEXT}/docker-compose.yaml" \
+      build
+  elif [[ "${CMD}" == "run" ]]; then
+    docker-compose \
+      --file "${BUILD_CONTEXT}/docker-compose.yaml" \
+      run \
+        --rm \
+      dev
+  fi
+}
+
+function parse_parameters() {
+	while [[ "$#" > 0 ]]
+	do
+		case "$1" in 
+			-h|--help)
+				print_menu
+				exit 0
+				;;
+			build)
+				CMD="build"
+				shift
+				;;
+			run)
+				CMD="run"
+				shift
+				;;
+			--)
+				break
+				;;
+			-*)
+				echo "Invalid option '$1'. Use --help to see the valid options" >&2
+				exit 1
+				;;
+			*)
+				break	
+				;;
+		esac
+		shift
+	done	
+}
+
+function print_menu() {
+  echo "Usage: ./dev_container.sh [-options]"
+  for var in "${!ENV_VARS[@]}"; do
+    echo "${var}:                 ${ENV_VARS[${var}]}"
+  done
+  echo ""
+  echo "Commands (required):"
+  echo "run                           Enter the development container with various credentials mounted."
+  echo "build                         Build the development container."
+  echo ""
+  echo "Parameters (optional):"
+  echo '  -s   | --shell              Set the container shell (options: ["zsh", "bash"]).                   (default: "zsh")'
+  echo '  -rc  | --shellrc            Shellrc file to be mounted o the container.                           (default: ".zshrc")'
+  echo '  -sh  | --shell-history      Shell history file to be mounted to the container.                    (default: ".zsh_history")'
+  # echo '  -kf  | --kubeconfig-folder  Mount a folder with kubeconfigs to the dev container in path ~/.kube. (default: ${HOME}/.kube)'
+  # echo '  -op  | --oidc-port          Port in container and in host system for oidc communication.          (default port: 8000)'
+  echo '  -h   | --help               Prints the help'
+}
+
+function set_user_variables() {
+  # if [[ $(uname -s) == "Darwin" ]]; then
+  #   export uid=$(id -u)
+  #   export gid=$(id -g)    
+  # elif [[ $(uname -s) == "Linux" ]]; then
+  #   export uid=$(id --user)
+  #   export gid=$(id --group)
+  # fi
+	export username=$(whoami)
+	export uid=$(id -u)
+	export gid=$(id -g)    
+}
+
+main "${@}"

@@ -1,0 +1,24 @@
+{{- if .Values.deploy.kongIngress }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kong-apps
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Leo310/HerGinnie-gitops
+    targetRevision: HEAD
+    path: applications/kong-ingress/applications/
+    helm:
+      valueFiles:
+        - {{ printf "../../../global-values/%s.yaml" .Values.clusterName }}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kong
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+{{- end }}

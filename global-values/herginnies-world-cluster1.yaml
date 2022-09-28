@@ -1,0 +1,7 @@
+clusterName: herginnies-world
+deploy:
+  certManager: true
+  argoWorkflows: true
+  kongIngress: true
+  externalDns: true
+  webapp: true
