@@ -1,4 +1,4 @@
-clusterName: herginnies-world
+clusterName: herginnies-world-cluster1
 deploy:
   certManager: true
   argoWorkflows: true
