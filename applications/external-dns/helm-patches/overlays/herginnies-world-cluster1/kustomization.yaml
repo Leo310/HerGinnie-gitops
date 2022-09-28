@@ -3,4 +3,5 @@ kind: Kustomization
 
 resources:
 - ../../base
-- aws-credentials-secret.yaml
+- cloudflare-secret.yaml
+# - aws-credentials-secret.yaml

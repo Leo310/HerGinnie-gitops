@@ -6,10 +6,12 @@ set -e
 declare -A ENV_VARS
 ENV_VARS=( \
   ["KUBECONFIG"]="Kubeconfig of the target cluster."
-  ["GITHUB_USERNAME"]="Github-Username for argocd accesstoken."
-  ["GITHUB_PASSWORD"]="Github-Password for argocd accesstoken."
-  ["AWS_ACCESS_KEY_ID"]="Aws access key id for external dns accesstoken."
-  ["AWS_SECRET_ACCESS_KEY"]="Aws access secret for external dns accesstoken."
+  # ["GITHUB_USERNAME"]="Github-Username for argocd accesstoken."
+  # ["GITHUB_PASSWORD"]="Github-Password for argocd accesstoken."
+  # ["AWS_ACCESS_KEY_ID"]="Aws access key id for external dns accesstoken."
+  # ["AWS_SECRET_ACCESS_KEY"]="Aws access secret for external dns accesstoken."
+  ["CF_API_EMAIL"]="Cloudflare email of account"
+  ["CF_API_KEY"]="Cloudflare access api key to update dns records"
 )
 
 declare -A ENV_VARS_REQUIRED
@@ -55,7 +57,7 @@ function main() {
 	# create_aws_route53_secret
 
 	# TODO
-	# create_cloudflare_secret
+	create_cloudflare_secret
 
 	# push secrets to repo	
 	push_to_repo
@@ -145,6 +147,22 @@ function create_github_read_secret() {
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
 		-sf ${TMP_FOLDER}/access-token-secret.yaml \
 		-o ${TOP_LEVEL_DIR}/applications/argocd/overlays/argocd/${CLUSTER_NAME}/argocd-secret.yaml
+	fi
+}
+
+function create_cloudflare_secret() {
+	if [ -z "${CF_API_EMAIL}" ] || [ -z "${CF_API_KEY}" ]; then
+		log "no cloudflare credentials specified -> will use existing one"
+	else 	
+	log "create sealed cloudflare secret to access dns"
+	cat ${TOP_LEVEL_DIR}/tooling/secret-templates/cloudflare-secret.yaml | \
+		yq --arg username "$CF_API_EMAIL" '.stringData.CF_API_EMAIL = $username' | \
+		yq --arg password "$CF_API_KEY" '.stringData.CF_API_KEY = $password' > \
+		${TMP_FOLDER}/cloudflare-secret.yaml
+
+	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
+		-sf ${TMP_FOLDER}/cloudflare-secret.yaml \
+		-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/overlays/${CLUSTER_NAME}/cloudflare-secret.yaml
 	fi
 }
 
