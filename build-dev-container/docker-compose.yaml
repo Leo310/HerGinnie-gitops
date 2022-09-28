@@ -24,6 +24,9 @@ services:
       - ${HOME}/.bashrc:${CONTAINER_HOME}/.bashrc
       - ${TOP_LEVEL_DIR}:${WORKDIR}
       - ${KUBECONFIG:-/dev/null}:${CONTAINER_HOME}/.kube/config_from_host
+      - ${HOME}/.ssh:${CONTAINER_HOME}/.ssh
+    ports:
+      - "22:22"
     entrypoint:
       - /bin/bash
     # user: "${uid}:${gid}"
