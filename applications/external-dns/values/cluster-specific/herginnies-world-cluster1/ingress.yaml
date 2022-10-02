@@ -1,4 +1,4 @@
-provider: aws
+provider: cloudflare
 interval: 1m
 
 env:
