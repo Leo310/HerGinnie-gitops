@@ -11,7 +11,7 @@ ENV_VARS=( \
   # ["AWS_ACCESS_KEY_ID"]="Aws access key id for external dns accesstoken."
   # ["AWS_SECRET_ACCESS_KEY"]="Aws access secret for external dns accesstoken."
   ["CF_API_EMAIL"]="Cloudflare email of account"
-  ["CF_API_KEY"]="Cloudflare access api key to update dns records"
+  ["CF_API_TOKEN"]="Cloudflare access api token to update dns records"
 )
 
 declare -A ENV_VARS_REQUIRED
@@ -151,13 +151,13 @@ function create_github_read_secret() {
 }
 
 function create_cloudflare_secret() {
-	if [ -z "${CF_API_EMAIL}" ] || [ -z "${CF_API_KEY}" ]; then
+	if [ -z "${CF_API_EMAIL}" ] || [ -z "${CF_API_TOKEN}" ]; then
 		log "no cloudflare credentials specified -> will use existing one"
 	else 	
 	log "create sealed cloudflare secret to access dns"
 	cat ${TOP_LEVEL_DIR}/tooling/secret-templates/cloudflare-secret.yaml | \
-		yq --arg username "$CF_API_EMAIL" '.stringData.CF_API_EMAIL = $username' | \
-		yq --arg password "$CF_API_KEY" '.stringData.CF_API_KEY = $password' > \
+		yq --arg email "$CF_API_EMAIL" '.stringData.CF_API_EMAIL = $email' | \
+		yq --arg token "$CF_API_TOKEN" '.stringData.CF_API_TOKEN = $token' > \
 		${TMP_FOLDER}/cloudflare-secret.yaml
 
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \

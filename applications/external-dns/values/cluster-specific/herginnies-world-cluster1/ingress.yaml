@@ -7,11 +7,11 @@ env:
     secretKeyRef:
       name: cloudflare-secret
       key: CF_API_EMAIL
-- name: CF_API_KEY
+- name: CF_API_TOKEN
   valueFrom:
     secretKeyRef:
       name: cloudflare-secret
-      key: CF_API_KEY
+      key: CF_API_TOKEN
 # extraVolumes: 
 # # AWS volume(s)
 # - name: aws-credentials
