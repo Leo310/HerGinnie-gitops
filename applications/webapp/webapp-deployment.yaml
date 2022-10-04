@@ -18,4 +18,4 @@ spec:
       - name: herginniewebapp
         image: leo310/herginniewebsite
         ports:
-        - containerPort: 3000
+        - containerPort: 80
