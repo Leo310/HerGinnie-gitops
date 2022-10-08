@@ -22,13 +22,11 @@ ENV_VARS_REQUIRED=( \
 declare -A INPUT_PARS
 INPUT_PARS=( \
   ["-d  | --debug"]="Debug flag for more noisy logging." \
-  ["-cn | --cluster-name"]="Clustername to specify right overlays" \
   ["-h  | --help"]="Prints the help."
 )
 
 declare -A INPUT_PARS_REQUIRED
 INPUT_PARS_REQUIRED=( \
-  ["-cn | --cluster-name"]="CLUSTER_NAME" \
 )
 
 function main() {
@@ -77,7 +75,7 @@ function push_to_repo() {
 	local -r branch=$(git rev-parse --abbrev-ref HEAD)
 	git checkout &>/dev/null || git checkout -b "${branch}"
   git add '.' 
-	git commit -m "update commit for ${CLUSTER_NAME} (for upto date secrets)"
+	git commit -m "update commit for upto date secrets"
   git push &>/dev/null || git push --set-upstream origin "${branch}"
   set -e
 }
@@ -98,22 +96,19 @@ function wait_for_sealed_secrets_controller() {
 function install_sealed_secrets() {
   log "install sealed-secrets"
 
-	kubectl apply -k "${TOP_LEVEL_DIR}/applications/sealed-secrets/overlays/${CLUSTER_NAME}"
+	kubectl apply -k "${TOP_LEVEL_DIR}/applications/sealed-secrets/overlays"
 }
 
 function install_argocd() {
   log "install argocd"
 
-	kubectl apply -k "${TOP_LEVEL_DIR}/applications/argocd/overlays/argocd/${CLUSTER_NAME}"
+	kubectl apply -k "${TOP_LEVEL_DIR}/applications/argocd/overlays/argocd"
 }
 
 function install_application_list() {
   log "install application-list"
 
-	# kubectl apply -k "${TOP_LEVEL_DIR}/application-list/overlays/${CLUSTER_NAME}/application-list.yaml"
-	# kubectl apply -f "${TOP_LEVEL_DIR}/application-list/application-list.yaml"
-	helm template -f "${TOP_LEVEL_DIR}/global-values/${CLUSTER_NAME}.yaml" "${TOP_LEVEL_DIR}/application-list" | kubectl apply -f -
-	# argocd app sync application-list
+	helm template "${TOP_LEVEL_DIR}/application-list" | kubectl apply -f -
 }
 
 function create_aws_route53_secret() {
@@ -130,7 +125,7 @@ function create_aws_route53_secret() {
 
 		${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
 			-sf ${TMP_FOLDER}/aws-credentials.yaml \
-			-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/overlays/${CLUSTER_NAME}/aws-credentials-secret.yaml
+			-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/overlays/aws-credentials-secret.yaml
 	fi
 }
 
@@ -146,7 +141,7 @@ function create_github_read_secret() {
 
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
 		-sf ${TMP_FOLDER}/access-token-secret.yaml \
-		-o ${TOP_LEVEL_DIR}/applications/argocd/overlays/argocd/${CLUSTER_NAME}/argocd-secret.yaml
+		-o ${TOP_LEVEL_DIR}/applications/argocd/overlays/argocd/argocd-secret.yaml
 	fi
 }
 
@@ -162,7 +157,7 @@ function create_cloudflare_secret() {
 
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
 		-sf ${TMP_FOLDER}/cloudflare-secret.yaml \
-		-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/overlays/${CLUSTER_NAME}/cloudflare-secret.yaml
+		-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/overlays/cloudflare-secret.yaml
 	fi
 }
 
@@ -176,10 +171,6 @@ function parse_parameters() {
 				;;
 			-d|--debug)
 				export DEBUG="true"
-				;;
-			-cn|--cluster-name)
-				CLUSTER_NAME=$2
-				shift
 				;;
 			--)
 				break

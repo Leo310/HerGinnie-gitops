@@ -11,9 +11,9 @@ spec:
     path: applications/external-dns/source
     helm:
       valueFiles:
-      - "../values/global/ingress.yaml"
-      - {{ printf "../values/cluster-specific/%s/ingress.yaml" .Values.clusterName }}
-      - {{ printf "../../../global-values/%s.yaml" .Values.clusterName }}
+      - ../values/global/ingress.yaml
+      - ../values/cluster-specific/ingress.yaml
+      - ../../../application-list/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: external-dns

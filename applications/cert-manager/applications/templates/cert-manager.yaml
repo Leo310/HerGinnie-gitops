@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
-    path: {{ printf "applications/cert-manager/overlays/%s" .Values.clusterName }}
+    path: applications/cert-manager/overlays
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager

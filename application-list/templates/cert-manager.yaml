@@ -12,7 +12,7 @@ spec:
     path: applications/cert-manager/applications
     helm:
       valueFiles:
-        - {{ printf "../../../global-values/%s.yaml" .Values.clusterName }}
+        - ../../../application-list/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager
