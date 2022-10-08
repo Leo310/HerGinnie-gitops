@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
-    path: applications/argocd/overlays/argocd/herginnies-world-cluster1
+    path: {{ printf "applications/argocd/overlays/%s" .Values.clusterName }}
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
