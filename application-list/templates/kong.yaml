@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kong-apps
+  name: kong
   namespace: argocd
 spec:
   project: default

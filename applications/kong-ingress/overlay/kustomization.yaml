@@ -4,6 +4,6 @@ kind: Kustomization
 namespace: kong
 
 resources:
-  - ../source/kong
+  - ../source
   # kong has namespace already declared in source
   # - namespace.yaml
