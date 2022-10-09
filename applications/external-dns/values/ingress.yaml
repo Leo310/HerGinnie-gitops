@@ -1,6 +1,18 @@
 provider: cloudflare
 interval: 1m
 
+sources:
+  - ingress
+
+rbac:
+  create: true
+  apiVersion: v1
+  serviceAccountName: external-dns-ingress
+
+# annotationFilter: "kubernetes.io/ingress.class notin (minio-ingress)"
+
+policy: sync
+
 env:
 - name: CF_API_EMAIL
   valueFrom:
