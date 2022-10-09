@@ -1,0 +1,6 @@
+apiVersion: v1
+description: inlets application
+home: https://github.com/argoproj/argo-workflows
+name: inlets-app
+version: 0.1.0
+appVersion: "not-in-use-currently"

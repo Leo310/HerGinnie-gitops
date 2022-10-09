@@ -4,4 +4,4 @@ deploy:
   kongIngress: true
   externalDns: true
   webapp: true
-  inlets: false
+  inlets: true

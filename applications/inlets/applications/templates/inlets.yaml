@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: inlets
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Leo310/HerGinnie-gitops
+    targetRevision: HEAD
+    path: applications/inlets/source
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: inlets
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
