@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
-    path: applications/inlets/overlay
+    path: applications/inlets/applications
   destination:
     server: https://kubernetes.default.svc
     namespace: inlets 
