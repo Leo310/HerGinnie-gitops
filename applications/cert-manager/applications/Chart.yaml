@@ -1,6 +1,0 @@
-apiVersion: v1
-description: cert-manager application
-home: https://github.com/cert-manager/cert-manager
-name: cert-manager-app
-version: 0.1.0
-appVersion: "not-in-use-currently"

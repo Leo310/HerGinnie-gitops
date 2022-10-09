@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
-    path: applications/inlets/applications/
+    path: applications/inlets/overlay
     helm:
       valueFiles:
         - ../../../application-list/values.yaml

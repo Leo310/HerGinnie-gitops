@@ -96,13 +96,13 @@ function wait_for_sealed_secrets_controller() {
 function install_sealed_secrets() {
   log "install sealed-secrets"
 
-	kubectl apply -k "${TOP_LEVEL_DIR}/applications/sealed-secrets/overlays"
+	kubectl apply -k "${TOP_LEVEL_DIR}/applications/sealed-secrets/overlay"
 }
 
 function install_argocd() {
   log "install argocd"
 
-	kubectl apply -k "${TOP_LEVEL_DIR}/applications/argocd/overlays"
+	kubectl apply -k "${TOP_LEVEL_DIR}/applications/argocd/overlay"
 }
 
 function install_application_list() {

@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
-    path: applications/kong-ingress/applications/
+    path: applications/kong-ingress/overlay
     helm:
       valueFiles:
         - ../../../application-list/values.yaml
