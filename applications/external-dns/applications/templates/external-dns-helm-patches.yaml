@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
-    path: applications/external-dns/helm-patches/overlays
+    path: applications/external-dns/helm-patches
   destination:
     server: https://kubernetes.default.svc
     namespace: external-dns

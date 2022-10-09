@@ -125,7 +125,7 @@ function create_aws_route53_secret() {
 
 		${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
 			-sf ${TMP_FOLDER}/aws-credentials.yaml \
-			-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/overlays/aws-credentials-secret.yaml
+			-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/aws-credentials-secret.yaml
 	fi
 }
 
@@ -141,7 +141,7 @@ function create_github_read_secret() {
 
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
 		-sf ${TMP_FOLDER}/access-token-secret.yaml \
-		-o ${TOP_LEVEL_DIR}/applications/argocd/overlays/argocd/argocd-secret.yaml
+		-o ${TOP_LEVEL_DIR}/applications/argocd/overlay/argocd-secret.yaml
 	fi
 }
 
@@ -157,7 +157,7 @@ function create_cloudflare_secret() {
 
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
 		-sf ${TMP_FOLDER}/cloudflare-secret.yaml \
-		-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/overlays/cloudflare-secret.yaml
+		-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/cloudflare-secret.yaml
 	fi
 }
 
