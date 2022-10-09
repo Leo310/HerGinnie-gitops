@@ -6,7 +6,6 @@ metadata:
 spec:
   project: default
   source:
-    chart: application-list
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
     path: application-list
