@@ -3,5 +3,6 @@
 # export AWS_SECRET_ACCESS_KEY=<your_key_id>
 # export GITHUB_PASSWORD=<your_key_id>
 # export GITHUB_USERNAME=<your_key_id>
-export CF_API_EMAIL=<your_key_id>
+export CF_API_EMAIL=<your_key_email>
 export CF_API_TOKEN=<your_key_id>
+export DO_INLETS_TOKEN=<your digital ocean token>

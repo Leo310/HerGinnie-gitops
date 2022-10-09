@@ -6,7 +6,6 @@ metadata:
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: letsencrypt-issuer
     kubernetes.io/ingress.class: kong
-    external-dns.alpha.kubernetes.io/target: "77.191.191.99"
 spec:
   tls:
   - secretName: webapp-tls-secret

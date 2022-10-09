@@ -5,4 +5,4 @@ namespace: inlets
 
 resources:
 - namespace.yaml
-# - cloudflare-secret.yaml
+- inlets-access-secret.yaml

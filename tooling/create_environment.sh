@@ -12,6 +12,7 @@ ENV_VARS=( \
   # ["AWS_SECRET_ACCESS_KEY"]="Aws access secret for external dns accesstoken."
   ["CF_API_EMAIL"]="Cloudflare email of account"
   ["CF_API_TOKEN"]="Cloudflare access api token to update dns records"
+  ["DO_INLETS_TOKEN"]="Digitalocean access token to create inlets server droplet"
 )
 
 declare -A ENV_VARS_REQUIRED
@@ -54,8 +55,8 @@ function main() {
 	# seal dns access secret for aws, dont need it know becuase using cloudflare
 	# create_aws_route53_secret
 
-	# TODO
 	create_cloudflare_secret
+	create_digitalocean_inlets_secret
 
 	# push secrets to repo	
 	push_to_repo
@@ -158,6 +159,21 @@ function create_cloudflare_secret() {
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
 		-sf ${TMP_FOLDER}/cloudflare-secret.yaml \
 		-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/cloudflare-secret.yaml
+	fi
+}
+
+function create_digitalocean_inlets_secret() {
+	if [ -z "${DO_INLETS_TOKEN}" ]; then
+		log "no Digitalocean access token specified -> will use existing one"
+	else 	
+	log "create sealed Digitalocean secret to create inlet droplet"
+	cat ${TOP_LEVEL_DIR}/tooling/secret-templates/inlets-access-secret.yaml | \
+		yq --arg token "$DO_INLETS_TOKEN" '.stringData.inlets-access-key = $token' | \
+		${TMP_FOLDER}/inlets-access-secret.yaml
+
+	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
+		-sf ${TMP_FOLDER}/inlets-access-secret.yaml \
+		-o ${TOP_LEVEL_DIR}/applications/inlets/helm-patches/inlets-access-secret.yaml
 	fi
 }
 
