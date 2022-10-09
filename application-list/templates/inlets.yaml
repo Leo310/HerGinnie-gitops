@@ -1,0 +1,24 @@
+{{- if .Values.deploy.inlets }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: inlets-apps
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Leo310/HerGinnie-gitops
+    targetRevision: HEAD
+    path: applications/inlets/applications/
+    helm:
+      valueFiles:
+        - ../../../application-list/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: inlets 
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+{{- end }}
