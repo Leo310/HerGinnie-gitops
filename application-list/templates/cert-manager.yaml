@@ -10,9 +10,6 @@ spec:
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
     path: applications/cert-manager/overlay
-    helm:
-      valueFiles:
-        - ../../../application-list/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager
