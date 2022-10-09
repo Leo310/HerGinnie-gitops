@@ -173,7 +173,7 @@ function create_digitalocean_inlets_secret() {
 
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
 		-sf ${TMP_FOLDER}/inlets-access-secret.yaml \
-		-o ${TOP_LEVEL_DIR}/applications/inlets/helm-patches/knlets-access-secret.yaml
+		-o ${TOP_LEVEL_DIR}/applications/inlets/helm-patches/inlets-access-secret.yaml
 	fi
 }
 
