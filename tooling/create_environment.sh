@@ -102,7 +102,7 @@ function install_sealed_secrets() {
 function install_argocd() {
   log "install argocd"
 
-	kubectl apply -k "${TOP_LEVEL_DIR}/applications/argocd/overlays/argocd"
+	kubectl apply -k "${TOP_LEVEL_DIR}/applications/argocd/overlays"
 }
 
 function install_application_list() {
