@@ -168,7 +168,7 @@ function create_digitalocean_inlets_secret() {
 	else 	
 	log "create sealed Digitalocean secret to create inlet droplet"
 	cat ${TOP_LEVEL_DIR}/tooling/secret-templates/inlets-access-secret.yaml | \
-		yq --arg token "$DO_INLETS_TOKEN" '.stringData.inlets-access-key = $token' | \
+		yq --arg token "$DO_INLETS_TOKEN" '.stringData."inlets-access-key" = $token' | \
 		${TMP_FOLDER}/inlets-access-secret.yaml
 
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
