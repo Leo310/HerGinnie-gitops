@@ -12,6 +12,7 @@ ENV_VARS=( \
   # ["AWS_SECRET_ACCESS_KEY"]="Aws access secret for external dns accesstoken."
   ["CF_API_EMAIL"]="Cloudflare email of account"
   ["CF_API_TOKEN"]="Cloudflare access api token to update dns records"
+  ["CF_TUNNEL_CREDS"]="Cloudflare access creds to create tunnel"
   ["DO_INLETS_TOKEN"]="Digitalocean access token to create inlets server droplet"
 )
 
@@ -55,8 +56,9 @@ function main() {
 	# seal dns access secret for aws, dont need it know becuase using cloudflare
 	# create_aws_route53_secret
 
-	create_cloudflare_secret
-	create_digitalocean_inlets_secret
+	create_cloudflare_tunnel_secret
+	# create_cloudflare_secret
+	# create_digitalocean_inlets_secret
 
 	# push secrets to repo	
 	push_to_repo
@@ -159,6 +161,21 @@ function create_cloudflare_secret() {
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
 		-sf ${TMP_FOLDER}/cloudflare-secret.yaml \
 		-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/cloudflare-secret.yaml
+	fi
+}
+
+function create_cloudflare_tunnel_secret() {
+	if [ -z "${CF_TUNNEL_CREDS}" ]; then
+		log "no cloudflare tunnel secret specified -> will use existing one"
+	else 	
+	log "create sealed cloudflare tunnel secret to create tunnel"
+	cat ${TOP_LEVEL_DIR}/tooling/secret-templates/tunnel-credentials.yaml | \
+		yq --arg secret "$CF_TUNNEL_CREDS" '.stringData."credentials.json" = $secret' | \
+		${TMP_FOLDER}/tunnel-credentials.yaml
+
+	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
+		-sf ${TMP_FOLDER}/tunnel-credentials.yaml \
+		-o ${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml
 	fi
 }
 

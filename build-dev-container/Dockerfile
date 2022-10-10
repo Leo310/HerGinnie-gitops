@@ -64,6 +64,12 @@ RUN curl -sLO "https://github.com/argoproj/argo-cd/releases/download/$argocd_ver
 RUN chmod +x argocd-linux-amd64
 RUN mv ./argocd-linux-amd64 /usr/local/bin/argocd
 
+# install cloudflared
+RUN mkdir -p --mode=0755 /usr/share/keyrings
+RUN curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+RUN echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared bullseye main' | tee /etc/apt/sources.list.d/cloudflared.list
+RUN apt-get update && apt-get install cloudflared
+
 # install go
 # RUN wget "https://golang.org/dl/${GO_VERSION}.tar.gz" -O "${GO_VERSION}.tar.gz"
 # RUN tar -C /usr/local -xzf "${GO_VERSION}.tar.gz"

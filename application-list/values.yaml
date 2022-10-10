@@ -1,7 +1,7 @@
 deploy:
-  certManager: true
-  argoWorkflows: true
+  certManager: false
   kongIngress: true
-  externalDns: true
+  externalDns: false
   webapp: true
-  inlets: true
+  inlets: false
+  cloudflared: true

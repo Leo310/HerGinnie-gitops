@@ -23,7 +23,7 @@ services:
       - ${HOME}/.gitconfig:${CONTAINER_HOME}/.gitconfig
       - ${HOME}/.bashrc:${CONTAINER_HOME}/.bashrc
       - ${TOP_LEVEL_DIR}:${WORKDIR}
-      - ${KUBECONFIG:-/dev/null}:${CONTAINER_HOME}/.kube/config_from_host
+      - ${KUBECONFIG:-~/.kube/config}:${CONTAINER_HOME}/.kube/config_from_host
       - ${HOME}/.ssh:${CONTAINER_HOME}/.ssh
     ports:
       - "22:22"
