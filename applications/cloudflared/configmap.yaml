@@ -10,5 +10,5 @@ data:
     no-autoupdate: true
     ingress:
     - hostname: '*.herginnies.world'
-      service: kong-proxy
+      service: kong-proxy.kong.svc.cluster.local
     - service: http_status:404
