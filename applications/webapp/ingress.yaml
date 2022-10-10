@@ -7,10 +7,10 @@ metadata:
     # cert-manager.io/cluster-issuer: letsencrypt-issuer
     kubernetes.io/ingress.class: kong
 spec:
-  tls:
-  - secretName: webapp-tls-secret
-    hosts:
-    - webapp.herginnies.world
+  # tls:
+  # - secretName: webapp-tls-secret
+  #   hosts:
+  #   - webapp.herginnies.world
   rules:
   - host: webapp.herginnies.world
     http:
