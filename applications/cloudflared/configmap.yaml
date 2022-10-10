@@ -9,6 +9,6 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-    - hostname: *.herginnies.world
+    - hostname: '*.herginnies.world'
       service: kong-proxy
     - service: http_status:404
