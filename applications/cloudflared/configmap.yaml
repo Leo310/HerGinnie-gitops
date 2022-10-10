@@ -9,4 +9,5 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-    - service: http://kong-proxy.kong.svc.cluster.local:80
+    - service: http://webapp-service.webapp.svc.cluster.local:80
+    # - service: http://kong-proxy.kong.svc.cluster.local:80
