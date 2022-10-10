@@ -9,8 +9,6 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-    - hostname: 'webapp.herginnies.world'
-      service: http://webapp-service.webapp.svc.cluster.local:3000
     - hostname: '*.herginnies.world'
-      service: http://kong-proxy.kong.svc.cluster.local
+      service: http://kong-ingress.kong.svc.cluster.local
     - service: http_status:404
