@@ -3,8 +3,8 @@ kind: Ingress
 metadata:
   name: argocd
   annotations:
-    kubernetes.io/tls-acme: "true"
-    cert-manager.io/cluster-issuer: letsencrypt-issuer
+    # kubernetes.io/tls-acme: "true"
+    # cert-manager.io/cluster-issuer: letsencrypt-issuer
     kubernetes.io/ingress.class: kong
 spec:
   tls:
