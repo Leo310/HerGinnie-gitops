@@ -9,9 +9,9 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-    - hostname: tunnel.example.com
+    - hostname: tunnel.herginnies.world
       service: http://web-service:80
-    - hostname: hello.example.com
+    - hostname: hello.herginnies.world
       service: hello_world
     - hostname: webapp.herginnies.world
       service: http://webapp-service.webapp.svc.cluster.local
