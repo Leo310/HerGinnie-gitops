@@ -170,7 +170,7 @@ function create_cloudflare_tunnel_secret() {
 	else 	
 	log "create sealed cloudflare tunnel secret to create tunnel"
 	cat ${TOP_LEVEL_DIR}/tooling/secret-templates/tunnel-credentials.yaml | \
-		yq --arg secret "$CF_TUNNEL_CREDS" '.stringData."credentials.json" = $secret' | \
+		yq --arg secret "$CF_TUNNEL_CREDS" '.stringData."credentials.json" = $secret' > \
 		${TMP_FOLDER}/tunnel-credentials.yaml
 
 	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
