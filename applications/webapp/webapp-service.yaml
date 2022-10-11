@@ -9,3 +9,6 @@ spec:
     - protocol: TCP
       port: 3000
       targetPort: 80
+    - protocol: TCP
+      port: 3001
+      targetPort: 3001
