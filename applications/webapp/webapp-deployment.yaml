@@ -19,3 +19,7 @@ spec:
         image: leo310/herginniewebsite
         ports:
         - containerPort: 80
+      - name: wordcloudapi
+        image: leo310/wordcloudapi
+        ports:
+        - containerPort: 3001
