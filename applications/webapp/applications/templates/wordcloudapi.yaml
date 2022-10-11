@@ -1,4 +1,4 @@
-{{- if .Values.deploy.wordcloudapi }}
+{{- if .Values.deploy.webapp.wordcloudapi }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

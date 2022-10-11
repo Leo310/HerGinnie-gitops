@@ -1,4 +1,4 @@
-{{- if .Values.deploy.website }}
+{{- if .Values.deploy.webapp.website }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
