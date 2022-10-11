@@ -1,21 +1,18 @@
-{{- if or .Values.deploy.webapp.website .Values.deploy.webapp.matomo .Values.deploy.webapp.wordcloudapi}}
+{{- if .Values.deploy.website }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: webapp
+  name: website
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/Leo310/HerGinnie-gitops
     targetRevision: HEAD
-    path: applications/webapp/applications
-    helm:
-      valueFiles:
-        - ../../../application-list/values.yaml
+    path: applications/webapp/website
   destination:
     server: https://kubernetes.default.svc
-    namespace: webapp
+    namespace: website
 
   syncPolicy:
     automated:

@@ -12,16 +12,6 @@ spec:
   #   hosts:
   #   - webapp.herginnies.world
   rules:
-  - host: webapp.herginnies.world
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: webapp-service
-            port:
-              number: 3000
   - host: wordcloudapi.herginnies.world
     http:
       paths:

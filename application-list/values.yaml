@@ -2,6 +2,9 @@ deploy:
   certManager: false
   kongIngress: true
   externalDns: false
-  webapp: true
   inlets: false
   cloudflared: true
+  webapp:
+    website: true
+    matomo: false
+    wordcloudapi: true
