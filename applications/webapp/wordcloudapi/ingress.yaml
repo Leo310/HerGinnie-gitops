@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: webapp-ingress
+  name: wordcloudapi-ingress
   annotations:
     # kubernetes.io/tls-acme: "true"
     # cert-manager.io/cluster-issuer: letsencrypt-issuer
@@ -19,6 +19,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: webapp-service
+            name: wordcloudapi-service
             port:
               number: 3001
