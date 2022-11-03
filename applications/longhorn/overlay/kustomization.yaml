@@ -3,6 +3,5 @@ kind: Kustomization
 
 resources:
   - ../source
-  - namespace.yaml
 
 namespace: longhorn-system
