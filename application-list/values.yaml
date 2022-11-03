@@ -4,6 +4,7 @@ deploy:
   externalDns: false
   inlets: false
   cloudflared: true
+  longhorn: true
   webapp:
     website: true
     matomo: false
