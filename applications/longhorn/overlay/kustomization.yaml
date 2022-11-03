@@ -5,4 +5,4 @@ resources:
   - ../source
   - namespace.yaml
 
-kamespace: longhorn-system
+namespace: longhorn-system
