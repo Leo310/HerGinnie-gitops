@@ -50,6 +50,7 @@ spec:
           - key: credentials.json
             path: cert
           - key: cert.pem
+            path: .
       # Create a config.yaml file from the ConfigMap below.
       - name: config
         configMap:
