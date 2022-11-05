@@ -45,44 +45,54 @@ function main() {
 
   parse_parameters "${@}"
 	
-	# apply sealed secret to cluster
 	install_sealed_secrets
-
 	wait_for_sealed_secrets_controller
 
 	# seal gitops repo access secret, dont need it know because repo is public
-	# create_github_read_secret
+	# secret_name="git-access"
+	# dest_directory="${TOP_LEVEL_DIR}/applications/argocd/overlay/argocd-secret.yaml"	
+	# env_secrets=('GITHUB_USERNAME' 'GITHUB_PASSWORD')
+	# dest_secrets=('username' 'password')
+	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
 
 	# seal dns access secret for aws, dont need it know becuase using cloudflare
-	# create_aws_route53_secret
+	# secret_name="aws-credentials"
+	# dest_directory="${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/aws-credentials-secret.yaml"	
+	# printf -v AWS_CREDENTIALS \
+	# 	"\n[default]\naws_access_key_id = %s\naws_secret_access_key = %s" \
+	# 	"${AWS_ACCESS_KEY_ID}" "${AWS_SECRET_ACCESS_KEY}"
+	# env_secrets=('AWS_CREDENTIALS')
+	# dest_secrets=('credentials')
+	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
+	
+	secret_name="tunnel-credentials"
+	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml"	
 	env_secrets=('CF_TUNNEL_CREDS')
 	dest_secrets=('credentials.json')
-	create_secret tunnel-credentials ${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml "${env_secrets[@]}" "${dest_secrets[@]}"
-	# create_cloudflare_tunnel_secret
-	# create_cloudflare_secret
-	# create_digitalocean_inlets_secret
+	create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
 
-	# push secrets to repo	
-	push_to_repo
+	# secret_name="cloudflare"
+	# dest_directory="${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/cloudflare-secret.yaml"	
+	# env_secrets=('CF_API_EMAIL' 'CF_API_TOKEN')
+	# dest_secrets=('CF_API_EMAIL' 'CF_API_TOKEN')
+	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
+	
+	# secret_name="inlets-access"
+	# dest_directory="${TOP_LEVEL_DIR}/applications/inlets/helm-patches/inlets-access-secret.yaml"	
+	# env_secrets=('DO_INLETS_TOKEN')
+	# dest_secrets=('inlets-access-key')
+	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
 
-	# apply cluster specific argocd
+	push_secrets_to_repo
 	install_argocd
-
-	# sync argocd via argocd cli
 	install_application_list
 
 	log "Cluster should be up and running in a few minutes"
 }
 
-function push_to_repo {
-  set +e
-	log "push updated secrets to repo"
-	local -r branch=$(git rev-parse --abbrev-ref HEAD)
-	git checkout &>/dev/null || git checkout -b "${branch}"
-  git add '.' 
-	git commit -m "update commit for upto date secrets"
-  git push &>/dev/null || git push --set-upstream origin "${branch}"
-  set -e
+function install_sealed_secrets {
+  log "install sealed-secrets"
+	kubectl apply -k "${TOP_LEVEL_DIR}/applications/sealed-secrets/overlay"
 }
 
 function wait_for_sealed_secrets_controller {
@@ -96,24 +106,6 @@ function wait_for_sealed_secrets_controller {
 		kubeseal --controller-namespace sealed-secrets --fetch-cert &>/dev/null
 	done
 	set -e
-}
-
-function install_sealed_secrets {
-  log "install sealed-secrets"
-
-	kubectl apply -k "${TOP_LEVEL_DIR}/applications/sealed-secrets/overlay"
-}
-
-function install_argocd {
-  log "install argocd"
-
-	kubectl apply -k "${TOP_LEVEL_DIR}/applications/argocd/overlay"
-}
-
-function install_application_list {
-  log "install application-list"
-
-	helm template "${TOP_LEVEL_DIR}/application-list" | kubectl apply -f -
 }
 
 function create_secret() {
@@ -143,85 +135,27 @@ function create_secret() {
 		-o ${dest_directory}
 }
 
-function create_aws_route53_secret() {
-	if [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
-		log "no aws credentials specified -> will use existing one"
-	else 	
-		log "create aws route53 secret for external-dns"
-		printf -v AWS_CREDENTIALS \
-      "\n[default]\naws_access_key_id = %s\naws_secret_access_key = %s" \
-      "${AWS_ACCESS_KEY_ID}" "${AWS_SECRET_ACCESS_KEY}"
-		cat ${TOP_LEVEL_DIR}/tooling/secret-templates/aws-credentials-secret.yaml | \
-			yq --arg credentials "$AWS_CREDENTIALS" '.stringData.credentials = $credentials' > \
-			${TMP_FOLDER}/aws-credentials.yaml
-
-		${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
-			-sf ${TMP_FOLDER}/aws-credentials.yaml \
-			-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/aws-credentials-secret.yaml
-	fi
+function push_secrets_to_repo {
+  set +e
+	log "push updated secrets to repo"
+	local -r branch=$(git rev-parse --abbrev-ref HEAD)
+	git checkout &>/dev/null || git checkout -b "${branch}"
+  git add '.' 
+	git commit -m "update commit for upto date secrets"
+  git push &>/dev/null || git push --set-upstream origin "${branch}"
+  set -e
 }
 
-function create_github_read_secret() {
-	if [ -z "${GITHUB_USERNAME}" ] || [ -z "${GITHUB_PASSWORD}" ]; then
-		log "no github credentials specified -> will use existing one"
-	else 	
-	log "create argocd github token for argocd"
-	cat ${TOP_LEVEL_DIR}/tooling/secret-templates/gitaccesssecret.yaml | \
-		yq --arg username "$GITHUB_USERNAME" '.stringData.username = $username' | \
-		yq --arg password "$GITHUB_PASSWORD" '.stringData.password = $password' > \
-		${TMP_FOLDER}/access-token-secret.yaml
-
-	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
-		-sf ${TMP_FOLDER}/access-token-secret.yaml \
-		-o ${TOP_LEVEL_DIR}/applications/argocd/overlay/argocd-secret.yaml
-	fi
+function install_argocd {
+  log "install argocd"
+	kubectl apply -k "${TOP_LEVEL_DIR}/applications/argocd/overlay"
 }
 
-function create_cloudflare_secret() {
-	if [ -z "${CF_API_EMAIL}" ] || [ -z "${CF_API_TOKEN}" ]; then
-		log "no cloudflare credentials specified -> will use existing one"
-	else 	
-	log "create sealed cloudflare secret to access dns"
-	cat ${TOP_LEVEL_DIR}/tooling/secret-templates/cloudflare-secret.yaml | \
-		yq --arg email "$CF_API_EMAIL" '.stringData.CF_API_EMAIL = $email' | \
-		yq --arg token "$CF_API_TOKEN" '.stringData.CF_API_TOKEN = $token' > \
-		${TMP_FOLDER}/cloudflare-secret.yaml
-
-	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
-		-sf ${TMP_FOLDER}/cloudflare-secret.yaml \
-		-o ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/cloudflare-secret.yaml
-	fi
+function install_application_list {
+  log "install application-list"
+	helm template "${TOP_LEVEL_DIR}/application-list" | kubectl apply -f -
 }
 
-function create_cloudflare_tunnel_secret() {
-	if [ -z "${CF_TUNNEL_CREDS}" ]; then
-		log "no cloudflare tunnel secret specified -> will use existing one"
-	else 	
-	log "create sealed cloudflare tunnel secret to create tunnel"
-	cat ${TOP_LEVEL_DIR}/tooling/secret-templates/tunnel-credentials.yaml | \
-		yq --arg secret "$CF_TUNNEL_CREDS" '.stringData."credentials.json" = $secret' > \
-		${TMP_FOLDER}/tunnel-credentials.yaml
-
-	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
-		-sf ${TMP_FOLDER}/tunnel-credentials.yaml \
-		-o ${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml
-	fi
-}
-
-function create_digitalocean_inlets_secret() {
-	if [ -z "${DO_INLETS_TOKEN}" ]; then
-		log "no Digitalocean access token specified -> will use existing one"
-	else 	
-	log "create sealed Digitalocean secret to create inlet droplet"
-	cat ${TOP_LEVEL_DIR}/tooling/secret-templates/inlets-access-secret.yaml | \
-		yq --arg token "$DO_INLETS_TOKEN" '.stringData."inlets-access-key" = $token' > \
-		${TMP_FOLDER}/inlets-access-secret.yaml
-
-	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
-		-sf ${TMP_FOLDER}/inlets-access-secret.yaml \
-		-o ${TOP_LEVEL_DIR}/applications/inlets/helm-patches/inlets-access-secret.yaml
-	fi
-}
 
 function parse_parameters() {
 	while [[ "$#" > 0 ]]
