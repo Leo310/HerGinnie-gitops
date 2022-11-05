@@ -19,3 +19,12 @@ spec:
         image: matomo
         ports:
         - containerPort: 80
+      env:
+      - name: MATOMO_DATABASE_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: mysql-secret
+            key: password
+      envFrom:
+      - configMapRef:
+          name: matomo-config
