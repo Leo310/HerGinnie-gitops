@@ -3,6 +3,6 @@ kind: Kustomization
 
 resources:
   - ../source
-  - issuer.yaml
+  # - issuer.yaml
   # cert-manager already creates namespace
   # - namespace.yaml
