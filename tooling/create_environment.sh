@@ -57,7 +57,7 @@ function main() {
 	# create_aws_route53_secret
 	env_secrets=('CF_TUNNEL_CREDS')
 	dest_secrets=('credentials.json')
-	create_secret tunnel_credentials ${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml "${env_secrets[@]}" "${dest_secrets[@]}"
+	create_secret tunnel-credentials ${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml "${env_secrets[@]}" "${dest_secrets[@]}"
 	# create_cloudflare_tunnel_secret
 	# create_cloudflare_secret
 	# create_digitalocean_inlets_secret
