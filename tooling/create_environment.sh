@@ -68,7 +68,7 @@ function main() {
 	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
 	
 	secret_name="cloudflare-ca-key"
-	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/origin-ca-issuer/cf-ca-secret.yaml"	
+	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/cloudflared/cf-ca-secret.yaml"	
 	env_secrets=('CF_CA_API_KEY')
 	dest_secrets=('key')
 	create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"

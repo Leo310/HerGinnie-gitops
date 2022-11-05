@@ -9,3 +9,4 @@ resources:
 - namespace.yaml
 - origin-issuer.yaml
 - tunnel-credentials.yaml
+- cloudflare-ca-secret.yaml
