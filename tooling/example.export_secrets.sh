@@ -7,3 +7,4 @@ export CF_API_EMAIL=<your_key_email>
 export CF_API_TOKEN=<your_key_id>
 export CF_TUNNEL_CREDS=<tunnel creds>
 export DO_INLETS_TOKEN=<your digital ocean token>
+export MYSQL_SECRET=<mysql db secret>
