@@ -61,7 +61,7 @@ function main() {
 	# create_secret "cloudflare-ca-key" ${TOP_LEVEL_DIR}/applications/cloudflared/cloudflared/cloudflare-ca-secret.yaml CF_CA_API_KEY key
 	
 	create_secret tunnel-credentials ${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml\
-		CF_TUNNEL_CREDS credentials.json CF_TUNNEL_ORIGIN_CERT origincert
+		CF_TUNNEL_CREDS credentials.json CF_TUNNEL_ORIGIN_CERT cert.pem
 
 	create_secret mysql ${TOP_LEVEL_DIR}/applications/webapp/matomo/mysql-secret.yaml MYSQL_SECRET password
 

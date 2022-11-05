@@ -32,12 +32,6 @@ spec:
           failureThreshold: 1
           initialDelaySeconds: 10
           periodSeconds: 10
-        env:
-        - name: TUNNEL_ORIGIN_CERT
-          valueFrom:
-            secretKeyRef:
-              name: tunnel-credentials
-              key: origincert
         volumeMounts:
         - name: config
           mountPath: /etc/cloudflared/config
@@ -55,6 +49,7 @@ spec:
           items:
           - key: credentials.json
             path: cert
+          - key: cert.pem
       # Create a config.yaml file from the ConfigMap below.
       - name: config
         configMap:
