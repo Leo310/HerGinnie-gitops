@@ -67,11 +67,11 @@ function main() {
 	# dest_secrets=('credentials')
 	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
 	
-	secret_name="cloudflare-ca-key"
-	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/cloudflared/cloudflare-ca-secret.yaml"	
-	env_secrets=('CF_CA_API_KEY')
-	dest_secrets=('key')
-	create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
+	# secret_name="cloudflare-ca-key"
+	# dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/cloudflared/cloudflare-ca-secret.yaml"	
+	# env_secrets=('CF_CA_API_KEY')
+	# dest_secrets=('key')
+	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
 
 	secret_name="tunnel-credentials"
 	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/cloudflared/tunnel-credentials.yaml"	
