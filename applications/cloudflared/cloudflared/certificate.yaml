@@ -8,6 +8,7 @@ spec:
   secretName: cf-tunnel-tls
   dnsNames:
     - herginnies.world
+    - "*.herginnies.world"
   # Duration of the certificate
   duration: 168h
   # Renew a day before the certificate expiration
