@@ -32,6 +32,12 @@ spec:
           failureThreshold: 1
           initialDelaySeconds: 10
           periodSeconds: 10
+        env:
+        - name: TUNNEL_ORIGIN_CERT
+          valueFrom:
+            secretKeyRef:
+              name: tunnel-credentials
+              key: origin-cert
         volumeMounts:
         - name: config
           mountPath: /etc/cloudflared/config
@@ -40,18 +46,15 @@ spec:
         # to run the tunnel. cloudflared will read this file from its local filesystem,
         # and it'll be stored in a k8s secret.
         - name: creds
-          mountPath: /etc/cloudflared/creds
+          mountPath: /etc/cloudflared
           readOnly: true
       volumes:
       - name: creds
         secret:
-          # By default, the credentials file will be created under ~/.cloudflared/<tunnel ID>.json
-          # when you run `cloudflared tunnel create`. You can move it into a secret by using:
-          # ```sh
-          # kubectl create secret generic tunnel-credentials \
-          # --from-file=credentials.json=/Users/yourusername/.cloudflared/<tunnel ID>.json
-          # ```
           secretName: tunnel-credentials
+          items:
+          - key: credentials.json
+            path: cert
       # Create a config.yaml file from the ConfigMap below.
       - name: config
         configMap:

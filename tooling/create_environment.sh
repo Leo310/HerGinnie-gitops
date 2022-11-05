@@ -14,6 +14,7 @@ ENV_VARS=( \
   ["CF_API_TOKEN"]="Cloudflare access api token to update dns records"
   ["CF_CA_API_KEY"]="Cloudflare access ca key to get cert.pem for encrpyted tunnel"
   ["CF_TUNNEL_CREDS"]="Cloudflare access creds to create tunnel"
+  ["CF_TUNNEL_ORIGIN_CERT"]="Cloudflare tunnel certificate"
   ["DO_INLETS_TOKEN"]="Digitalocean access token to create inlets server droplet"
   ["MYSQL_SECRET"]="Mysql Database secret"
 )
@@ -75,8 +76,8 @@ function main() {
 
 	secret_name="tunnel-credentials"
 	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml"	
-	env_secrets=('CF_TUNNEL_CREDS')
-	dest_secrets=('credentials.json')
+	env_secrets=('CF_TUNNEL_CREDS' 'CF_TUNNEL_ORIGIN_CERT')
+	dest_secrets=('credentials.json' 'origin-cert')
 	create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
 
 	secret_name="mysql"
