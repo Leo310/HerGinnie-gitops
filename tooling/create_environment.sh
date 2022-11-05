@@ -74,7 +74,7 @@ function main() {
 	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
 
 	secret_name="tunnel-credentials"
-	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/cloudflared/tunnel-credentials.yaml"	
+	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml"	
 	env_secrets=('CF_TUNNEL_CREDS')
 	dest_secrets=('credentials.json')
 	create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
