@@ -10,3 +10,4 @@ resources:
 - origin-issuer.yaml
 - tunnel-credentials.yaml
 - cloudflare-ca-secret.yaml
+- certificate.yaml
