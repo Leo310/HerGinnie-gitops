@@ -55,8 +55,10 @@ function main() {
 
 	# seal dns access secret for aws, dont need it know becuase using cloudflare
 	# create_aws_route53_secret
-
-	create_cloudflare_tunnel_secret
+	env_secrets=('CF_TUNNEL_CREDS')
+	dest_secrets=('credentials.json')
+	create_secret cloudflare ${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml "${env_secrets[@]}" "${dest_secrets[@]}"
+	# create_cloudflare_tunnel_secret
 	# create_cloudflare_secret
 	# create_digitalocean_inlets_secret
 
@@ -72,7 +74,7 @@ function main() {
 	log "Cluster should be up and running in a few minutes"
 }
 
-function push_to_repo() {
+function push_to_repo {
   set +e
 	log "push updated secrets to repo"
 	local -r branch=$(git rev-parse --abbrev-ref HEAD)
@@ -83,7 +85,7 @@ function push_to_repo() {
   set -e
 }
 
-function wait_for_sealed_secrets_controller() {
+function wait_for_sealed_secrets_controller {
 	set +e
 	# wait until sealed-secrets-controller is up
 	log "Waiting for sealed-secrets-controller"
@@ -96,22 +98,49 @@ function wait_for_sealed_secrets_controller() {
 	set -e
 }
 
-function install_sealed_secrets() {
+function install_sealed_secrets {
   log "install sealed-secrets"
 
 	kubectl apply -k "${TOP_LEVEL_DIR}/applications/sealed-secrets/overlay"
 }
 
-function install_argocd() {
+function install_argocd {
   log "install argocd"
 
 	kubectl apply -k "${TOP_LEVEL_DIR}/applications/argocd/overlay"
 }
 
-function install_application_list() {
+function install_application_list {
   log "install application-list"
 
 	helm template "${TOP_LEVEL_DIR}/application-list" | kubectl apply -f -
+}
+
+function create_secret() {
+	secret_name=$1
+	dest_directory=$2
+	env_variables=$3
+	dest_variables=$4
+
+	replace_args=()
+	i=0
+	for secret_env in "${env_variables[@]}"; do
+		if ! [[ -v "$secret_env" ]]; then
+			log "no ${secret_name} credentials specified -> will use existing one"
+			return
+		fi
+		replace_args+=("| yq --arg value ${secret_env} '.stringData.\"${dest_variables[$i]}\" = \$value'")	
+		i+=1
+	done
+	log "create ${secret_name} secret"
+	cat_template_yaml="cat ${TOP_LEVEL_DIR}/tooling/secret-templates/${secret_name}-secret.yaml"
+	pipe_into_tmp_secret="> ${TMP_FOLDER}/${secret_name}-secret.yaml"
+	whole_command="$cat_template_yaml ${replace_args[*]} $pipe_into_tmp_secret"
+	eval $whole_command
+
+	${TOP_LEVEL_DIR}/tooling/utils/seal-secret.sh -cn sealed-secrets \
+		-sf ${TMP_FOLDER}/${secret_name}-secret.yaml \
+		-o ${dest_directory}
 }
 
 function create_aws_route53_secret() {
