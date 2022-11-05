@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: cloudflared
 
 resources:
-  - origin-ca-issuer/crds
-  - origin-ca-issuer/manifests
-  - origin-ca-issuer/rbac
-  - cloudflared
+  - origin-ca-issuer/crds/*
+  - origin-ca-issuer/manifests/*
+  - origin-ca-issuer/rbac/*
+  - cloudflared/*
