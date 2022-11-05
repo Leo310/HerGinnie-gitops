@@ -51,52 +51,22 @@ function main() {
 	install_sealed_secrets
 	wait_for_sealed_secrets_controller
 
-	# seal gitops repo access secret, dont need it know because repo is public
-	# secret_name="git-access"
-	# dest_directory="${TOP_LEVEL_DIR}/applications/argocd/overlay/argocd-secret.yaml"	
-	# env_secrets=('GITHUB_USERNAME' 'GITHUB_PASSWORD')
-	# dest_secrets=('username' 'password')
-	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
-
+	# create_secret git-access ${TOP_LEVEL_DIR}/applications/argocd/overlay/argocd-secret.yaml\
+	# 	GITHUB_USERNAME  username GITHUB_PASSWORD password
 	# seal dns access secret for aws, dont need it know becuase using cloudflare
-	# secret_name="aws-credentials"
-	# dest_directory="${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/aws-credentials-secret.yaml"	
 	# printf -v AWS_CREDENTIALS \
 	# 	"\n[default]\naws_access_key_id = %s\naws_secret_access_key = %s" \
 	# 	"${AWS_ACCESS_KEY_ID}" "${AWS_SECRET_ACCESS_KEY}"
-	# env_secrets=('AWS_CREDENTIALS')
-	# dest_secrets=('credentials')
-	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
+	# create_secret "aws-credentials" "${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/aws-credentials-secret.yaml" 'AWS_CREDENTIALS' 'credentials'
+	# create_secret "cloudflare-ca-key" ${TOP_LEVEL_DIR}/applications/cloudflared/cloudflared/cloudflare-ca-secret.yaml CF_CA_API_KEY key
 	
-	# secret_name="cloudflare-ca-key"
-	# dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/cloudflared/cloudflare-ca-secret.yaml"	
-	# env_secrets=('CF_CA_API_KEY')
-	# dest_secrets=('key')
-	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
+	create_secret tunnel-credentials ${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml\
+		CF_TUNNEL_CREDS credentials.json CF_TUNNEL_ORIGIN_CERT origincert
 
-	secret_name="tunnel-credentials"
-	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml"	
-	env_secrets=('CF_TUNNEL_CREDS' 'CF_TUNNEL_ORIGIN_CERT')
-	dest_secrets=('credentials.json' 'origin-cert')
-	create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
+	create_secret mysql ${TOP_LEVEL_DIR}/applications/webapp/matomo/mysql-secret.yaml MYSQL_SECRET password
 
-	secret_name="mysql"
-	dest_directory="${TOP_LEVEL_DIR}/applications/webapp/matomo/mysql-secret.yaml"	
-	env_secrets=('MYSQL_SECRET')
-	dest_secrets=('password')
-	create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
-
-	# secret_name="cloudflare"
-	# dest_directory="${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/cloudflare-secret.yaml"	
-	# env_secrets=('CF_API_EMAIL' 'CF_API_TOKEN')
-	# dest_secrets=('CF_API_EMAIL' 'CF_API_TOKEN')
-	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
-	
-	# secret_name="inlets-access"
-	# dest_directory="${TOP_LEVEL_DIR}/applications/inlets/helm-patches/inlets-access-secret.yaml"	
-	# env_secrets=('DO_INLETS_TOKEN')
-	# dest_secrets=('inlets-access-key')
-	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
+	# create_secret cloudflare ${TOP_LEVEL_DIR}/applications/external-dns/helm-patches/cloudflare-secret.yaml CF_API_EMAIL CF_API_EMAIL CF_API_TOKEN CF_API_TOKEN
+	# create_secret inlets-access ${TOP_LEVEL_DIR}/applications/inlets/helm-patches/inlets-access-secret.yaml DO_INLETS_TOKEN inlets-access-key
 
 	push_secrets_to_repo
 	install_argocd
@@ -126,17 +96,26 @@ function wait_for_sealed_secrets_controller {
 function create_secret() {
 	secret_name=$1
 	dest_directory=$2
-	env_variables=$3
-	dest_variables=$4
+	shift
+	shift
+	env_variables=()
+	dest_variables=()
 
 	replace_args=()
+	while [[ $# -gt 0 ]]; do
+		env_variables+=($1)
+		dest_variables+=($2)
+		shift
+		shift
+	done
 	i=0
 	for secret_env in "${env_variables[@]}"; do
 		if ! [[ -v "$secret_env" ]]; then
-			log "no ${secret_name} credentials specified -> will use existing one"
+			warning "no ${secret_name} credentials specified -> will use existing one"
 			return
 		fi
-		replace_args+=("| yq --arg value ${secret_env} '.stringData.\"${dest_variables[$i]}\" = \$value'")	
+		replace_args+=("| yq --arg value '${!secret_env}' '.stringData.\"${dest_variables[i]}\" = \$value'")	
+		echo ${env_variables[@]}
 		i+=1
 	done
 	log "create ${secret_name} secret"

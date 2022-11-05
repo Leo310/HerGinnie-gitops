@@ -37,7 +37,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: tunnel-credentials
-              key: origin-cert
+              key: origincert
         volumeMounts:
         - name: config
           mountPath: /etc/cloudflared/config
