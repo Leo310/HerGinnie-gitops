@@ -7,5 +7,5 @@ deploy:
   longhorn: true
   webapp:
     website: true
-    matomo: false
+    matomo: true
     wordcloudapi: true
