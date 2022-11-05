@@ -4,5 +4,8 @@ kind: Kustomization
 namespace: cloudflared
 
 resources:
-  - origin-ca-issuer
-  - cloudflared
+- configmap
+- deployment
+- namespace
+- origin-issuer
+- tunnel-credentials
