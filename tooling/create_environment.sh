@@ -12,6 +12,7 @@ ENV_VARS=( \
   # ["AWS_SECRET_ACCESS_KEY"]="Aws access secret for external dns accesstoken."
   ["CF_API_EMAIL"]="Cloudflare email of account"
   ["CF_API_TOKEN"]="Cloudflare access api token to update dns records"
+  ["CF_CA_API_KEY"]="Cloudflare access ca key to get cert.pem for encrpyted tunnel"
   ["CF_TUNNEL_CREDS"]="Cloudflare access creds to create tunnel"
   ["DO_INLETS_TOKEN"]="Digitalocean access token to create inlets server droplet"
   ["MYSQL_SECRET"]="Mysql Database secret"
@@ -66,8 +67,14 @@ function main() {
 	# dest_secrets=('credentials')
 	# create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
 	
+	secret_name="cloudflare-ca-key"
+	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/origin-ca-issuer/cf-ca-secret.yaml"	
+	env_secrets=('CF_CA_API_KEY')
+	dest_secrets=('key')
+	create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
+
 	secret_name="tunnel-credentials"
-	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/tunnel-credentials.yaml"	
+	dest_directory="${TOP_LEVEL_DIR}/applications/cloudflared/cloudflared/tunnel-credentials.yaml"	
 	env_secrets=('CF_TUNNEL_CREDS')
 	dest_secrets=('credentials.json')
 	create_secret $secret_name $dest_directory "${env_secrets[@]}" "${dest_secrets[@]}"
