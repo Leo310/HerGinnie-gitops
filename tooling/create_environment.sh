@@ -115,7 +115,6 @@ function create_secret() {
 			return
 		fi
 		replace_args+=("| yq --arg value '${!secret_env}' '.stringData.\"${dest_variables[i]}\" = \$value'")	
-		echo ${env_variables[@]}
 		i+=1
 	done
 	log "create ${secret_name} secret"
