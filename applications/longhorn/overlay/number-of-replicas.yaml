@@ -1,0 +1,3 @@
+- op: replace
+  path: "/data/storageclass.yaml/parameters/numberOfReplicas"
+  value: "1"

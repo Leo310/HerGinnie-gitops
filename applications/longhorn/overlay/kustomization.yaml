@@ -6,3 +6,9 @@ resources:
   - ingress.yaml
 
 namespace: longhorn-system
+
+patches:
+- path: number-of-replicas.yaml
+  target:
+    kind: ConfigMap
+    name: longhorn-storageclass
