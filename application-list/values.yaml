@@ -1,5 +1,4 @@
 gitopsrepo: https://github.com/Leo310/lhs.gitops
-clusterdomain: lhs.gitops
 deploy:
   certManager: false
   kongIngress: true
