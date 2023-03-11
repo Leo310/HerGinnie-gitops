@@ -1,4 +1,4 @@
-{{- if or .Values.deploy.trending-trawler.api }}
+{{- if or .Values.deploy.trendingtrawler.api }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

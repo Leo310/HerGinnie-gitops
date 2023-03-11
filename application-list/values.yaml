@@ -9,5 +9,5 @@ deploy:
     website: true
     matomo: true
     wordcloudapi: true
-  trending-trawler:
+  trendingtrawler:
     api: true
