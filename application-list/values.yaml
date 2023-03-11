@@ -1,4 +1,3 @@
-gitopsrepo: https://github.com/Leo310/lhs.gitops
 deploy:
   certManager: false
   kongIngress: true
