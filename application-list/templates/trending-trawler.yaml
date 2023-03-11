@@ -1,0 +1,24 @@
+{{- if or .Values.deploy.trending-trawler.api }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: trending-trawler
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Leo310/lhs.gitops
+    targetRevision: HEAD
+    path: applications/trending-trawler/applications
+    helm:
+      valueFiles:
+        - ../../../application-list/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: trending-trawler
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+{{- end }}
