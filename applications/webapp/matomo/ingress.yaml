@@ -10,15 +10,15 @@ spec:
   # tls:
   # - secretName: webapp-tls-secret
   #   hosts:
-  #   - webapp.herginnies.world
+  #   - webapp.lhs.world
   rules:
-  - host: matomo.herginnies.world
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: matomo-service
-            port:
-              number: 80
+    - host: matomo.lhs.world
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: matomo-service
+                port:
+                  number: 80

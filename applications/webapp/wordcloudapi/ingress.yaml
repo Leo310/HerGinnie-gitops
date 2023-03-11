@@ -10,15 +10,15 @@ spec:
   # tls:
   # - secretName: webapp-tls-secret
   #   hosts:
-  #   - webapp.herginnies.world
+  #   - webapp.lhs.world
   rules:
-  - host: wordcloudapi.herginnies.world
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: wordcloudapi-service
-            port:
-              number: 3001
+    - host: wordcloudapi.lhs.world
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wordcloudapi-service
+                port:
+                  number: 3001

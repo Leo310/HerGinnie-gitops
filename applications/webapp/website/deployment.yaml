@@ -15,7 +15,7 @@ spec:
         app: website
     spec:
       containers:
-      - name: herginniewebsite
-        image: leo310/herginniewebsite
-        ports:
-        - containerPort: 80
+        - name: lhswebsite
+          image: leo310/lhs.world
+          ports:
+            - containerPort: 80

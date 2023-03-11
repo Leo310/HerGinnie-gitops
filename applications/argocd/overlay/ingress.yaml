@@ -10,15 +10,15 @@ spec:
   # tls:
   # - secretName: argocd-secret # provided by Argo CD
   #   hosts:
-  #   - argocd.herginnies.world
+  #   - argocd.lhs.world
   rules:
-  - host: argocd.herginnies.world
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: argocd-server
-            port:
-              name: http
+    - host: argocd.lhs.world
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  name: http

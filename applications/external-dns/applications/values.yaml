@@ -14,17 +14,17 @@ rbac:
 policy: sync
 
 env:
-- name: CF_API_EMAIL
-  valueFrom:
-    secretKeyRef:
-      name: cloudflare-secret
-      key: CF_API_EMAIL
-- name: CF_API_TOKEN
-  valueFrom:
-    secretKeyRef:
-      name: cloudflare-secret
-      key: CF_API_TOKEN
-# extraVolumes: 
+  - name: CF_API_EMAIL
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-secret
+        key: CF_API_EMAIL
+  - name: CF_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-secret
+        key: CF_API_TOKEN
+# extraVolumes:
 # # AWS volume(s)
 # - name: aws-credentials
 #   secret:
@@ -36,4 +36,4 @@ env:
 #   readOnly: true
 
 # sets the lookup domain for external-dns
-domainFilters: ["herginnies.world"]
+domainFilters: ["lhs.world"]
