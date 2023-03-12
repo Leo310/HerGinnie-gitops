@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-deployment
+  name: website-deployment
   labels:
-    app: api
+    app: website
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: api
+      app: website
   template:
     metadata:
       labels:
-        app: api
+        app: website
     spec:
       containers:
-        - name: trending-trawler-api
-          image: leo310/trending-trawler-api
+        - name: trending-trawler-website
+          image: leo310/trending-trawler-website
           ports:
             - containerPort: 8000
