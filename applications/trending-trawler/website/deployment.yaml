@@ -18,4 +18,4 @@ spec:
         - name: trending-trawler-website
           image: leo310/trending-trawler-website
           ports:
-            - containerPort: 8000
+            - containerPort: 80
