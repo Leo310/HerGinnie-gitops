@@ -11,3 +11,4 @@ deploy:
     wordcloudapi: true
   trendingtrawler:
     api: true
+    website: true
