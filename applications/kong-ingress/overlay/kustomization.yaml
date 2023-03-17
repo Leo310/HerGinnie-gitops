@@ -7,3 +7,9 @@ resources:
   - ../source
   # kong has namespace already declared in source
   # - namespace.yaml
+
+patches:
+  - path: timeout.yaml
+    target:
+      kind: CustomResourceDefinition
+      name: kongingresses.configuration.konghq.com
